@@ -123,3 +123,61 @@ public:
         merge(left.begin(), left.end(), right.begin(), right.end(), vec.begin());
     }
 };
+
+int main(){
+    Cinema cinema;
+    int choice;
+    string username, password, filmChoice, seatChoice, day;
+
+    while (true){
+        cout << "\nSelamat datang di Cinema XXI" << endl;
+        cout << "1. Daftar" << endl;
+        cout << "2. Masuk" << endl;
+        cout << "3. Keluar" << endl;
+        cout << "Masukkan pilihan: ";
+        cin >> choice;
+
+        if (choice == 1){
+            cout << "\nMasukkan username: ";
+            cin >> username;
+            cout << "Masukkan password: ";
+            cin >> password;
+            cinema.registerUser(username, password);
+            cout << "Pendaftaran berhasil!" << endl;
+        } else if (choice == 2) {
+            cout << "\nMasukkan username: ";
+            cin >> username;
+            cout << "Masukkan password: ";
+            cin >> password;
+            if (cinema.loginUser(username, password)){
+                cout << "Login berhasil!\n" << endl;
+                cinema.displayFilms();
+                cout << "Pilih film (1-5): ";
+                cin >> choice;
+                if (choice < 1 || choice > 5){
+                    cout << "Pilihan tidak valid" << endl;
+                    continue;
+                }
+                filmChoice = cinema.getFilms()[choice - 1].title;
+                cinema.displaySeats(filmChoice);
+                cout << "\nPilih kursi (contoh: A1): ";
+                cin >> seatChoice;
+                if (cinema.bookSeat(filmChoice, seatChoice)){
+                    cout << "Masukkan hari (Senin-Minggu): ";
+                    cin >> day;
+                    cinema.confirmBooking(filmChoice, seatChoice, day);
+                } else {
+                    cout << "Kursi sudah dipesan atau kursi tidak valid!" << endl;
+                }
+            } else {
+                cout << "Username atau password tidak valid!" << endl;
+            }
+        } else if (choice == 3){
+            cout << "Terima kasih." << endl;
+            break;
+        } else {
+            cout << "Pilihan tidak valid!" << endl;
+        }
+    }
+    return 0;
+}
