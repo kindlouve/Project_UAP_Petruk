@@ -1,53 +1,60 @@
 #include <iostream>
-#include <map>
 #include <fstream>
-
+#include <vector>
+#include <map>
+#include <string>
+#include <algorithm>
+#include <cstring> 
+#include <stack>
+#include <queue>
+#include <list>
 using namespace std;
 
-struct User {
+struct User{
     string username;
     string password;
 };
 
-
-class Cinema {
-private:
-    map<string, string> users;
-
-public:
-    Cinema() {
-        loadUsers();
-    }
-
-    void loadUsers() {
-        ifstream infile("users.txt");
-        string username, password;
-        while (infile >> username >> password) {
-            users[username] = password;
-        }
-        infile.close();
-    }
-
-    void saveUser(const string &username, const string &password) {
-        ofstream outfile("users.txt", ios::app);
-        outfile << username << " " << password << endl;
-        outfile.close();
-    }
-
-    bool registerUser(const string &username, const string &password) {
-        if (users.find(username) != users.end()) {
-            return false;
-        }
-        users[username] = password;
-        saveUser(username, password);
-        return true;
-    }
-
-    bool loginUser(const string &username, const string &password) {
-        return users.find(username) != users.end() && users[username] == password;
-    }
+struct Film{
+    string title;
+    string showtime;
 };
 
-int main () {
-    return 0;
-}
+class Cinema{
+private:
+    vector<User> users;
+    map<string, vector<vector<string>>> seats;
+    vector<Film> films;
+
+public:
+    Cinema(){
+        films.push_back({"How To Make Millions Before Grandma Dies", "20:20"});
+        films.push_back({"The Garfield Movie", "14:15"});
+        films.push_back({"Inside Out 2", "18:50"});
+        films.push_back({"Dilan 1983 Wo Ai Ni", "13:15"});
+        films.push_back({"Avatar The Way of Water", "21:00"});
+
+        for (const auto& film : films){
+            seats[film.title] = vector<vector<string>>(8, vector<string>(8, "Available"));
+        }
+    }
+
+    void registerUser(const string& username, const string& password){
+        users.push_back({username, password});
+        ofstream userFile("users.txt", ios::app);
+        userFile << username << " " << password << endl;
+        userFile.close();
+    }
+
+    bool loginUser(const string& username, const string& password){
+        ifstream userFile("users.txt");
+        string u, p;
+        while (userFile >> u >> p) {
+            if (u == username && p == password){
+                userFile.close();
+                return true;
+            }
+        }
+        userFile.close();
+        return false;
+    }
