@@ -2,7 +2,12 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <string>
 #include <algorithm>
+#include <cstring> 
+#include <stack>
+#include <queue>
+#include <list>
 using namespace std;
 
 struct User{
