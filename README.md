@@ -22,3 +22,36 @@ public:
     Cinema() {
         loadUsers();
     }
+
+    void loadUsers() {
+        ifstream infile("users.txt");
+        string username, password;
+        while (infile >> username >> password) {
+            users[username] = password;
+        }
+        infile.close();
+    }
+
+    void saveUser(const string &username, const string &password) {
+        ofstream outfile("users.txt", ios::app);
+        outfile << username << " " << password << endl;
+        outfile.close();
+    }
+
+    bool registerUser(const string &username, const string &password) {
+        if (users.find(username) != users.end()) {
+            return false;
+        }
+        users[username] = password;
+        saveUser(username, password);
+        return true;
+    }
+
+    bool loginUser(const string &username, const string &password) {
+        return users.find(username) != users.end() && users[username] == password;
+    }
+};
+
+int main () {
+    return 0;
+}
