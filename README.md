@@ -8,3 +8,17 @@ ANGGOTA KELOMPOK :
 #include <map>
 #include <fstream>
 using namespace std;
+
+struct User {
+    string username;
+    string password;
+};
+
+class Cinema {
+private:
+    map<string, string> users;
+
+public:
+    Cinema() {
+        loadUsers();
+    }
