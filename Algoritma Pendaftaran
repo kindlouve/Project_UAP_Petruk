@@ -2,12 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
-#include <string>
 #include <algorithm>
-#include <cstring> 
-#include <stack>
-#include <queue>
-#include <list>
 using namespace std;
 
 struct User{
@@ -35,7 +30,7 @@ public:
         films.push_back({"Avatar The Way of Water", "21:00"});
 
         for (const auto& film : films){
-            seats[film.title] = vector<vector<string>>(8, vector<string>(8, "Available"));
+            seats[film.title] = vector<vector<string>>(8, vector<string>(8, "Tersedia"));
         }
     }
 
@@ -58,3 +53,68 @@ public:
         userFile.close();
         return false;
     }
+
+    void displayFilms(){
+        for (size_t i = 0; i < films.size(); i++){
+            cout << i + 1 << ". " << films[i].title << " pada pukul " << films[i].showtime << endl;
+        }
+    }
+
+    void displaySeats(const string& filmTitle){
+        const auto& filmSeats = seats[filmTitle];
+        for (size_t i = 0; i < filmSeats.size(); i++){
+            for (size_t j = 0; j < filmSeats[i].size(); j++){
+                cout << (char)('A' + i) << j + 1 << ": " << filmSeats[i][j] << "\t";
+            }
+            cout << endl;
+        }
+    }
+
+    bool bookSeat(const string& filmTitle, const string& seat){
+        int row = seat[0] - 'A';
+        int col = stoi(seat.substr(1)) - 1;
+        if (row >= 0 && row < 8 && col >= 0 && col < 8 && seats[filmTitle][row][col] == "Tersedia"){
+            seats[filmTitle][row][col] = "Dipesan";
+            return true;
+        }
+        return false;
+    }
+
+    void confirmBooking(const string& filmTitle, const string& seat, const string& day){
+        int price = (day == "Sabtu" || day == "Minggu") ? 50000 : 40000;
+        cout << "Pemesanan Berhasil!" << endl;
+        cout << "Film: " << filmTitle << endl;
+        cout << "Kursi: " << seat << endl;
+        cout << "Hari: " << day << endl;
+        cout << "Harga: Rp. " << price << endl;
+        cout << "Scan barcode ini untuk masuk." << endl;
+        cout << "|| || || || || || || || || ||" << endl;
+        cout << "|| || || || || || || || || ||" << endl;
+        cout << "|| || || || || || || || || ||" << endl;
+        cout << "|| || || || || || || || || ||" << endl;
+        cout << "1  2  3  4  5  6  7  8  9  0" << endl;
+    }
+
+    const vector<Film>& getFilms() const{
+        return films;
+    }
+
+    vector<int> divideVector(const vector<int>& vec){
+        int n = vec.size();
+        vector<int> leftHalf(vec.begin(), vec.begin() + n / 2);
+        return leftHalf;
+    }
+
+    void mergeSort(vector<int>& vec){
+        if (vec.size() <= 1)
+            return;
+
+        vector<int> left = divideVector(vec);
+        vector<int> right(vec.begin() + vec.size() / 2, vec.end());
+
+        mergeSort(left);
+        mergeSort(right);
+
+        merge(left.begin(), left.end(), right.begin(), right.end(), vec.begin());
+    }
+};
